@@ -369,6 +369,42 @@
     @media (max-width: 575px) {
       .filter-bar, .sub-header, .px-grid { padding-left: 16px !important; padding-right: 16px !important; }
     }
+
+    /* ── Pagination ── */
+    .pagination-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 36px 0 52px;
+      min-height: 60px;
+    }
+    .pg-btn {
+      min-width: 36px; height: 36px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border: none; background: none;
+      font-size: 14px; color: #374151; font-weight: 500;
+      border-radius: 50%;
+      cursor: pointer;
+      padding: 0 4px;
+      transition: background .12s;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .pg-btn:hover:not(:disabled):not(.active) { background: #f3f4f6; }
+    .pg-btn.active {
+      border: 1.5px solid #9ca3af;
+      color: #111;
+      font-weight: 700;
+      background: #fff;
+    }
+    .pg-btn:disabled { color: #d1d5db; cursor: default; pointer-events: none; }
+    .pg-arrow { color: #6b7280; min-width: 32px; }
+    .pg-ellipsis {
+      font-size: 14px; color: #6b7280;
+      padding: 0 6px; line-height: 36px;
+      pointer-events: none; user-select: none;
+    }
   </style>
 </head>
 <body>
@@ -647,7 +683,7 @@
 </div>
 
 <!-- ── Grid ── -->
-<div class="px-grid pt-3 pb-5" style="padding-left:40px;padding-right:40px;">
+<div class="px-grid pt-3" style="padding-left:40px;padding-right:40px;">
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 g-3"
        id="listings-grid"></div>
   <div id="no-results" class="text-center py-5" style="display:none;">
@@ -657,6 +693,8 @@
       <i class="bi bi-arrow-counterclockwise me-1"></i>Reset Filters
     </button>
   </div>
+  <!-- Pagination -->
+  <div class="pagination-wrap" id="pagination"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -857,9 +895,136 @@ const filterValues = { type: '', status: '' };
 
 /* State for drawer filters */
 const drawerFilters = { beds: '', baths: '', quality: '' };
-let priceMin = 0, priceMax = 5000000;
+let priceMin = 0, priceMax = Infinity;
 
-/* ── Tab switching ── */
+/* Pagination state */
+const PER_PAGE   = 12;
+let currentPage  = 1;
+let filteredData = [];
+
+/* ── Pagination render ── */
+function renderPagination(total) {
+  const wrap = document.getElementById('pagination');
+  if (total <= 1) { wrap.innerHTML = ''; return; }
+
+  const cur = currentPage;
+
+  /* Build page numbers to show */
+  const show = new Set([1]);
+  for (let i = Math.max(2, cur - 1); i <= Math.min(total - 1, cur + 1); i++) show.add(i);
+  show.add(total);
+  const pages = [...show].sort((a, b) => a - b);
+
+  /* Insert ellipsis markers */
+  const items = [];
+  for (let i = 0; i < pages.length; i++) {
+    if (i > 0 && pages[i] - pages[i - 1] > 1) items.push('…');
+    items.push(pages[i]);
+  }
+
+  const chevL = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>`;
+  const chevR = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>`;
+
+  let html = `<button class="pg-btn pg-arrow" onclick="goToPage(${cur - 1})" ${cur === 1 ? 'disabled' : ''}>${chevL}</button>`;
+
+  for (const item of items) {
+    if (item === '…') {
+      html += `<span class="pg-ellipsis">…</span>`;
+    } else {
+      html += `<button class="pg-btn ${item === cur ? 'active' : ''}" onclick="goToPage(${item})">${item}</button>`;
+    }
+  }
+
+  html += `<button class="pg-btn pg-arrow" onclick="goToPage(${cur + 1})" ${cur === total ? 'disabled' : ''}>${chevR}</button>`;
+
+  wrap.innerHTML = html;
+}
+
+function goToPage(page) {
+  const total = Math.ceil(filteredData.length / PER_PAGE);
+  if (page < 1 || page > total) return;
+  currentPage = page;
+  renderPage();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderPage() {
+  const total  = Math.ceil(filteredData.length / PER_PAGE);
+  const start  = (currentPage - 1) * PER_PAGE;
+  const slice  = filteredData.slice(start, start + PER_PAGE);
+  const grid   = document.getElementById('listings-grid');
+  const noR    = document.getElementById('no-results');
+
+  if (!filteredData.length) {
+    grid.innerHTML = '';
+    noR.style.display = 'block';
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+
+  noR.style.display = 'none';
+  grid.innerHTML = slice.map(renderCard).join('');
+  renderPagination(total);
+}
+
+function setDropdown(key, value, label, btn) {
+  filterValues[key] = value;
+  document.getElementById(`dd-${key}-label`).textContent = label;
+  btn.closest('ul').querySelectorAll('.dropdown-item').forEach(el => el.classList.remove('is-selected'));
+  btn.classList.add('is-selected');
+  applyFilters();
+}
+
+function applyFilters() {
+  const status   = filterValues.status;
+  const type     = filterValues.type;
+  const minBeds  = typeof drawerFilters.beds  === 'number' ? drawerFilters.beds  : 0;
+  const minBaths = typeof drawerFilters.baths === 'number' ? drawerFilters.baths : 0;
+  const quality  = drawerFilters.quality || '';
+  const sort     = document.getElementById('f-sort').value;
+
+  filteredData = listings.filter(l => {
+    if (status   && l.status  !== status)   return false;
+    if (type     && l.type    !== type)     return false;
+    if (quality  && l.quality !== quality)  return false;
+    if (l.price < priceMin || (priceMax !== Infinity && l.price > priceMax)) return false;
+    if (minBeds  && (l.beds  === null || l.beds  < minBeds))  return false;
+    if (minBaths && (l.baths === null || l.baths < minBaths)) return false;
+    return true;
+  });
+
+  if (sort === 'price-asc')  filteredData.sort((a, b) => a.price - b.price);
+  if (sort === 'price-desc') filteredData.sort((a, b) => b.price - a.price);
+  if (sort === 'sqft-desc')  filteredData.sort((a, b) => (b.sqft || 0) - (a.sqft || 0));
+  if (sort === 'oldest')     filteredData.sort((a, b) => b.days - a.days);
+  if (sort === 'newest')     filteredData.sort((a, b) => a.days - b.days);
+
+  currentPage = 1;
+  document.getElementById('count-display').textContent = filteredData.length.toLocaleString();
+  updateShowBtn();
+  renderPage();
+}
+
+function resetFilters() {
+  filterValues.type   = '';
+  filterValues.status = '';
+  document.getElementById('dd-type-label').textContent   = 'All Listings';
+  document.getElementById('dd-status-label').textContent = 'Both';
+  drawerFilters.beds = drawerFilters.baths = drawerFilters.quality = '';
+  document.querySelectorAll('.ftog-group .ftog-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim() === 'Any');
+  });
+  priceMin = 0; priceMax = Infinity;
+  document.getElementById('range-min').value = 0;
+  document.getElementById('range-max').value = 100;
+  document.getElementById('range-fill').style.left  = '0%';
+  document.getElementById('range-fill').style.width = '100%';
+  document.getElementById('price-min-label').textContent = '$0';
+  document.getElementById('price-max-label').textContent = '$5M+';
+  updateHistogramHighlight(0, 100);
+  document.getElementById('f-sort').selectedIndex = 0;
+  applyFilters();
+}
 function switchTab(tab) {
   document.querySelectorAll('.adv-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + tab).classList.add('active');
@@ -939,69 +1104,6 @@ function setDropdown(key, value, label, btn) {
   document.getElementById(`dd-${key}-label`).textContent = label;
   btn.closest('ul').querySelectorAll('.dropdown-item').forEach(el => el.classList.remove('is-selected'));
   btn.classList.add('is-selected');
-  applyFilters();
-}
-
-function applyFilters() {
-  const status  = filterValues.status;
-  const type    = filterValues.type;
-  const minBeds = typeof drawerFilters.beds === 'number' ? drawerFilters.beds : 0;
-  const minBaths= typeof drawerFilters.baths === 'number' ? drawerFilters.baths : 0;
-  const quality = drawerFilters.quality || '';
-  const sort    = document.getElementById("f-sort").value;
-
-  let data = listings.filter(l => {
-    if (status   && l.status  !== status)   return false;
-    if (type     && l.type    !== type)     return false;
-    if (quality  && l.quality !== quality)  return false;
-    if (l.price < priceMin || (priceMax !== Infinity && l.price > priceMax)) return false;
-    if (minBeds  && (l.beds  === null || l.beds  < minBeds))  return false;
-    if (minBaths && (l.baths === null || l.baths < minBaths)) return false;
-    return true;
-  });
-
-  if (sort === "price-asc")  data.sort((a, b) => a.price - b.price);
-  if (sort === "price-desc") data.sort((a, b) => b.price - a.price);
-  if (sort === "sqft-desc")  data.sort((a, b) => (b.sqft || 0) - (a.sqft || 0));
-  if (sort === "oldest")     data.sort((a, b) => b.days - a.days);
-  if (sort === "newest")     data.sort((a, b) => a.days - b.days);
-
-  const grid = document.getElementById("listings-grid");
-  const noR  = document.getElementById("no-results");
-  document.getElementById("count-display").textContent = data.length.toLocaleString();
-  updateShowBtn();
-
-  if (!data.length) {
-    grid.innerHTML = "";
-    noR.style.display = "block";
-  } else {
-    noR.style.display = "none";
-    grid.innerHTML = data.map(renderCard).join("");
-  }
-}
-
-function resetFilters() {
-  /* dropdowns */
-  filterValues.type   = '';
-  filterValues.status = '';
-  document.getElementById('dd-type-label').textContent   = 'All Listings';
-  document.getElementById('dd-status-label').textContent = 'Both';
-  /* drawer toggles */
-  drawerFilters.beds = drawerFilters.baths = drawerFilters.quality = '';
-  document.querySelectorAll('.ftog-group .ftog-btn').forEach((btn,i) => {
-    btn.classList.toggle('active', btn.textContent.trim() === 'Any');
-  });
-  /* price slider */
-  priceMin = 0; priceMax = Infinity;
-  document.getElementById('range-min').value = 0;
-  document.getElementById('range-max').value = 100;
-  document.getElementById('range-fill').style.left  = '0%';
-  document.getElementById('range-fill').style.width = '100%';
-  document.getElementById('price-min-label').textContent = '$0';
-  document.getElementById('price-max-label').textContent = '$5M+';
-  updateHistogramHighlight(0, 100);
-  /* sort */
-  document.getElementById('f-sort').selectedIndex = 0;
   applyFilters();
 }
 
