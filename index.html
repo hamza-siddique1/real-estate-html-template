@@ -239,17 +239,136 @@
     .meta-heart:hover { color: #dc2626; }
     .meta-heart.saved { color: #dc2626; }
 
-.sub-header,
-#listings-grid {
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-
     /* ── Responsive image height ── */
     @media (max-width: 575px)  { .listing-img { height: 190px; } }
     @media (min-width: 1400px) { .listing-img { height: 188px; } }
+
+    /* ══════════════════════════════
+       ADVANCED DRAWER
+    ══════════════════════════════ */
+    #advancedDrawer { width: 360px; }
+    @media (max-width: 480px) { #advancedDrawer { width: 100vw; } }
+
+    /* Drawer header tabs */
+    .adv-tab {
+      background: none; border: none; padding: 0 0 14px;
+      font-size: 14px; font-weight: 600; color: #6b7280;
+      display: flex; align-items: center; gap: 6px; cursor: pointer;
+      border-bottom: 2.5px solid transparent; margin-bottom: -1px;
+      transition: color .15s;
+    }
+    .adv-tab.active { color: #15803d; border-bottom-color: #15803d; }
+    .adv-tab-sparkle {
+      background: linear-gradient(90deg,#f97316,#ec4899,#a855f7);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; font-size: 15px;
+    }
+
+    /* Section label */
+    .adv-label { font-size: 14.5px; font-weight: 600; color: #111827; margin-bottom: 10px; }
+
+    /* Toggle button group */
+    .ftog-group {
+      display: flex; border-radius: 10px; overflow: hidden;
+      border: 1px solid #e5e7eb;
+    }
+    .ftog-btn {
+      flex: 1; padding: 9px 4px; border: none;
+      border-right: 1px solid #e5e7eb;
+      background: #f5f6f7; color: #374151;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      transition: background .12s, color .12s;
+    }
+    .ftog-btn:last-child { border-right: none; }
+    .ftog-btn.active { background: #15803d; color: #fff; }
+    .ftog-btn:hover:not(.active) { background: #ecfdf5; color: #15803d; }
+
+    /* Price histogram */
+    .price-histogram {
+      display: flex; align-items: flex-end; gap: 2px;
+      height: 56px; padding: 0 2px 4px;
+    }
+    .price-bar {
+      flex: 1; background: #86efac; border-radius: 2px 2px 0 0;
+      transition: background .15s;
+    }
+    .price-bar.in-range { background: #16a34a; }
+
+    /* Dual range slider */
+    .range-wrap { position: relative; height: 24px; margin: 0 4px; }
+    .range-track {
+      position: absolute; top: 50%; left: 0; right: 0;
+      height: 4px; background: #e5e7eb; border-radius: 2px;
+      transform: translateY(-50%);
+    }
+    .range-fill {
+      position: absolute; height: 4px; background: #16a34a;
+      border-radius: 2px; top: 50%; transform: translateY(-50%);
+    }
+    .range-wrap input[type="range"] {
+      position: absolute; width: 100%; top: 50%; transform: translateY(-50%);
+      -webkit-appearance: none; appearance: none;
+      background: transparent; pointer-events: none;
+      height: 24px; outline: none; margin: 0;
+    }
+    .range-wrap input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 20px; height: 20px;
+      border-radius: 50%; background: #15803d;
+      border: 3px solid #fff; box-shadow: 0 1px 5px rgba(0,0,0,.28);
+      cursor: pointer; pointer-events: all;
+    }
+    .range-wrap input[type="range"]::-moz-range-thumb {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #15803d; border: 3px solid #fff;
+      box-shadow: 0 1px 5px rgba(0,0,0,.28); cursor: pointer;
+      pointer-events: all;
+    }
+    .price-labels { display: flex; justify-content: space-between; font-size: 11.5px; color: #6b7280; margin-top: 4px; }
+
+    /* Drawer dropdowns */
+    .adv-select {
+      width: 100%; border: 1px solid #e5e7eb; border-radius: 8px;
+      padding: 9px 12px; font-size: 13.5px; color: #374151;
+      background: #fff; cursor: pointer; appearance: auto;
+    }
+    .adv-select:focus { outline: none; border-color: #16a34a; box-shadow: none; }
+    .adv-select:disabled { background: #f9fafb; color: #9ca3af; }
+
+    /* Year built inputs */
+    .year-built-box {
+      display: flex; align-items: center;
+      border: 1px solid #e5e7eb; border-radius: 8px;
+      padding: 8px 12px; gap: 8px; background: #fff;
+    }
+    .year-built-box span { font-size: 13.5px; color: #374151; font-weight: 500; white-space: nowrap; }
+    .year-built-box input {
+      border: none; outline: none; font-size: 13.5px; color: #9ca3af;
+      width: 100%; background: transparent;
+    }
+
+    /* Footer */
+    .adv-footer {
+      border-top: 1px solid #e5e7eb; padding: 14px 20px;
+      display: flex; gap: 10px; background: #fff;
+    }
+    .adv-footer .btn-reset {
+      flex: 1; border: 1.5px solid #d1d5db; border-radius: 10px;
+      background: #fff; color: #374151; font-size: 13.5px; font-weight: 500;
+      padding: 11px; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; gap: 6px;
+    }
+    .adv-footer .btn-reset:hover { background: #f9fafb; }
+    .adv-footer .btn-show {
+      flex: 1.4; border: none; border-radius: 10px;
+      background: #15803d; color: #fff; font-size: 13.5px; font-weight: 600;
+      padding: 11px; cursor: pointer;
+    }
+    .adv-footer .btn-show:hover { background: #166534; }
+
+    /* ── Grid spacing & responsive ── */
+    @media (max-width: 575px) {
+      .filter-bar, .sub-header, .px-grid { padding-left: 16px !important; padding-right: 16px !important; }
+    }
   </style>
 </head>
 <body>
@@ -303,7 +422,7 @@
 
     <!-- Advanced — green border, green icon -->
     <button class="fb-btn fb-btn-advanced"
-            type="button" data-bs-toggle="collapse" data-bs-target="#advancedFilters">
+            type="button" data-bs-toggle="offcanvas" data-bs-target="#advancedDrawer">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke-width="2.2"
            stroke-linecap="round" stroke-linejoin="round">
         <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/>
@@ -317,65 +436,199 @@
   </div>
 </div>
 
-<!-- ── Advanced Filters Collapse ── -->
-<div class="collapse" id="advancedFilters">
-  <div class="bg-white border-bottom border-light px-4 py-3">
-    <div class="row g-2">
-      <div class="col-12 col-sm-6 col-md-3 col-lg-2">
-        <label class="form-label small fw-semibold mb-1">Min Price</label>
-        <select id="f-min" class="form-select form-select-sm" onchange="applyFilters()">
-          <option value="0">No Min</option>
-          <option value="100000">$100k</option>
-          <option value="200000">$200k</option>
-          <option value="300000">$300k</option>
-          <option value="500000">$500k</option>
-          <option value="700000">$700k</option>
-        </select>
-      </div>
-      <div class="col-12 col-sm-6 col-md-3 col-lg-2">
-        <label class="form-label small fw-semibold mb-1">Max Price</label>
-        <select id="f-max" class="form-select form-select-sm" onchange="applyFilters()">
-          <option value="">No Max</option>
-          <option value="200000">$200k</option>
-          <option value="400000">$400k</option>
-          <option value="600000">$600k</option>
-          <option value="800000">$800k</option>
-          <option value="1000000">$1M</option>
-        </select>
-      </div>
-      <div class="col-12 col-sm-6 col-md-3 col-lg-2">
-        <label class="form-label small fw-semibold mb-1">Min Beds</label>
-        <select id="f-beds" class="form-select form-select-sm" onchange="applyFilters()">
-          <option value="0">Any</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-          <option value="4">4+</option>
-          <option value="5">5+</option>
-        </select>
-      </div>
-      <div class="col-12 col-sm-6 col-md-3 col-lg-2">
-        <label class="form-label small fw-semibold mb-1">Quality</label>
-        <select id="f-quality" class="form-select form-select-sm" onchange="applyFilters()">
-          <option value="">All</option>
-          <option value="GOOD">Good</option>
-          <option value="AVERAGE">Average</option>
-          <option value="POOR">Poor</option>
-        </select>
-      </div>
-      <div class="col-12 col-sm-6 col-md-3 col-lg-3">
-        <label class="form-label small fw-semibold mb-1">Search Address</label>
-        <input type="text" id="f-search" class="form-control form-control-sm"
-               placeholder="Street, city…" oninput="applyFilters()" />
-      </div>
-      <div class="col-12 col-sm-6 col-md-3 col-lg-1 d-flex align-items-end">
-        <button class="btn btn-outline-secondary btn-sm w-100" onclick="resetFilters()">
-          <i class="bi bi-x-circle me-1"></i>Reset
-        </button>
-      </div>
+<!-- ══════════════════════════════════════
+     ADVANCED FILTERS OFFCANVAS DRAWER
+════════════════════════════════════════ -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="advancedDrawer"
+     aria-labelledby="advancedDrawerLabel">
+
+  <!-- Header / tabs -->
+  <div class="offcanvas-header border-bottom px-4 pt-4 pb-0 align-items-start">
+    <div class="d-flex gap-4 flex-grow-1">
+      <button class="adv-tab active" id="tab-adv" onclick="switchTab('adv')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#15803d"
+             stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/>
+          <line x1="4" y1="18" x2="20" y2="18"/>
+          <circle cx="9" cy="6" r="2" fill="#fff" stroke="#15803d"/>
+          <circle cx="16" cy="12" r="2" fill="#fff" stroke="#15803d"/>
+          <circle cx="9" cy="18" r="2" fill="#fff" stroke="#15803d"/>
+        </svg>
+        Advanced Filters
+      </button>
+      <button class="adv-tab" id="tab-quality" onclick="switchTab('quality')">
+        <span class="adv-tab-sparkle">✦</span> Quality Filters
+      </button>
     </div>
+    <button type="button" class="btn-close ms-2 mt-1" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
   </div>
-</div>
+
+  <!-- Body -->
+  <div class="offcanvas-body px-4 py-0" style="overflow-y:auto;">
+
+    <!-- ── ADVANCED TAB ── -->
+    <div id="content-adv">
+
+      <!-- Beds -->
+      <div class="mt-4 mb-4">
+        <div class="adv-label">Beds</div>
+        <div class="ftog-group" id="tog-beds">
+          <button class="ftog-btn active" onclick="toggleFilter('beds',this,'')">Any</button>
+          <button class="ftog-btn" onclick="toggleFilter('beds',this,'studio')">Studio</button>
+          <button class="ftog-btn" onclick="toggleFilter('beds',this,1)">1+</button>
+          <button class="ftog-btn" onclick="toggleFilter('beds',this,2)">2+</button>
+          <button class="ftog-btn" onclick="toggleFilter('beds',this,3)">3+</button>
+          <button class="ftog-btn" onclick="toggleFilter('beds',this,4)">4+</button>
+        </div>
+      </div>
+
+      <!-- Baths -->
+      <div class="mb-4">
+        <div class="adv-label">Baths</div>
+        <div class="ftog-group" id="tog-baths">
+          <button class="ftog-btn active" onclick="toggleFilter('baths',this,'')">Any</button>
+          <button class="ftog-btn" onclick="toggleFilter('baths',this,1)">1+</button>
+          <button class="ftog-btn" onclick="toggleFilter('baths',this,2)">2+</button>
+          <button class="ftog-btn" onclick="toggleFilter('baths',this,3)">3+</button>
+          <button class="ftog-btn" onclick="toggleFilter('baths',this,4)">4+</button>
+          <button class="ftog-btn" onclick="toggleFilter('baths',this,5)">5+</button>
+        </div>
+      </div>
+
+      <!-- Garage -->
+      <div class="mb-4">
+        <div class="adv-label">Garage</div>
+        <div class="ftog-group" id="tog-garage">
+          <button class="ftog-btn active" onclick="toggleFilter('garage',this,'')">Any</button>
+          <button class="ftog-btn" onclick="toggleFilter('garage',this,1)">1+</button>
+          <button class="ftog-btn" onclick="toggleFilter('garage',this,2)">2+</button>
+          <button class="ftog-btn" onclick="toggleFilter('garage',this,3)">3+</button>
+          <button class="ftog-btn" onclick="toggleFilter('garage',this,4)">4+</button>
+          <button class="ftog-btn" onclick="toggleFilter('garage',this,5)">5+</button>
+        </div>
+      </div>
+
+      <!-- Parking -->
+      <div class="mb-4">
+        <div class="adv-label">Parking</div>
+        <div class="ftog-group" id="tog-parking">
+          <button class="ftog-btn active" onclick="toggleFilter('parking',this,'')">Any</button>
+          <button class="ftog-btn" onclick="toggleFilter('parking',this,1)">1+</button>
+          <button class="ftog-btn" onclick="toggleFilter('parking',this,2)">2+</button>
+          <button class="ftog-btn" onclick="toggleFilter('parking',this,3)">3+</button>
+          <button class="ftog-btn" onclick="toggleFilter('parking',this,4)">4+</button>
+          <button class="ftog-btn" onclick="toggleFilter('parking',this,5)">5+</button>
+        </div>
+      </div>
+
+      <!-- Price -->
+      <div class="mb-4">
+        <div class="adv-label">Price</div>
+        <!-- Histogram bars -->
+        <div class="price-histogram" id="price-histogram">
+          <!-- bars injected by JS -->
+        </div>
+        <!-- Dual range slider -->
+        <div class="range-wrap">
+          <div class="range-track"></div>
+          <div class="range-fill" id="range-fill"></div>
+          <input type="range" id="range-min" min="0" max="100" value="0" oninput="updatePriceSlider()">
+          <input type="range" id="range-max" min="0" max="100" value="100" oninput="updatePriceSlider()">
+        </div>
+        <div class="price-labels">
+          <span>min<br><strong id="price-min-label">$0</strong></span>
+          <span style="text-align:right;">max<br><strong id="price-max-label">$5M+</strong></span>
+        </div>
+      </div>
+
+      <!-- Days on Market / Sold Within -->
+      <div class="row g-3 mb-4">
+        <div class="col-6">
+          <div class="adv-label">Days on Market</div>
+          <select class="adv-select" id="f-days">
+            <option value="">Any</option>
+            <option value="1">1 day</option>
+            <option value="7">7 days</option>
+            <option value="14">14 days</option>
+            <option value="30">30 days</option>
+            <option value="90">90 days</option>
+          </select>
+        </div>
+        <div class="col-6">
+          <div class="adv-label" style="color:#9ca3af;">Sold Within</div>
+          <select class="adv-select" id="f-sold-within" disabled>
+            <option value="">Any</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Year Built -->
+      <div class="mb-4">
+        <div class="adv-label">Year built</div>
+        <div class="row g-3">
+          <div class="col-6">
+            <div class="year-built-box">
+              <span>From</span>
+              <input type="number" id="f-year-from" placeholder="Any" min="1900" max="2026">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="year-built-box">
+              <span>To</span>
+              <input type="number" id="f-year-to" placeholder="2026" min="1900" max="2026">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quality (also in advanced tab for convenience) -->
+      <div class="mb-4">
+        <div class="adv-label">Quality</div>
+        <div class="ftog-group" id="tog-quality">
+          <button class="ftog-btn active" onclick="toggleFilter('quality',this,'')">Any</button>
+          <button class="ftog-btn" onclick="toggleFilter('quality',this,'GOOD')">Good</button>
+          <button class="ftog-btn" onclick="toggleFilter('quality',this,'AVERAGE')">Average</button>
+          <button class="ftog-btn" onclick="toggleFilter('quality',this,'POOR')">Poor</button>
+          <button class="ftog-btn" onclick="toggleFilter('quality',this,'FAIR')">Fair</button>
+        </div>
+      </div>
+
+    </div><!-- /content-adv -->
+
+    <!-- ── QUALITY TAB ── -->
+    <div id="content-quality" style="display:none;">
+      <div class="mt-4 mb-4">
+        <div class="adv-label">Listing Quality Score</div>
+        <p class="text-muted" style="font-size:13px;">Filter listings by their quality rating based on listing completeness and photo quality.</p>
+        <div class="ftog-group" id="tog-quality2">
+          <button class="ftog-btn active" onclick="toggleFilter('quality',this,'')">Any</button>
+          <button class="ftog-btn" onclick="toggleFilter('quality',this,'GOOD')">Good</button>
+          <button class="ftog-btn" onclick="toggleFilter('quality',this,'AVERAGE')">Average</button>
+          <button class="ftog-btn" onclick="toggleFilter('quality',this,'FAIR')">Fair</button>
+          <button class="ftog-btn" onclick="toggleFilter('quality',this,'POOR')">Poor</button>
+        </div>
+      </div>
+    </div><!-- /content-quality -->
+
+  </div><!-- /offcanvas-body -->
+
+  <!-- Footer -->
+  <div class="adv-footer">
+    <button class="btn-reset" onclick="resetFilters()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="1 4 1 10 7 10"/>
+        <path d="M3.51 15a9 9 0 102.13-9.36L1 10"/>
+      </svg>
+      Reset filters
+    </button>
+    <button class="btn-show" id="show-btn" data-bs-dismiss="offcanvas">
+      Show listings
+    </button>
+  </div>
+
+</div><!-- /offcanvas -->
 
 <!-- ── Sub-header ── -->
 <div class="sub-header d-flex align-items-center justify-content-between">
@@ -394,8 +647,9 @@
 </div>
 
 <!-- ── Grid ── -->
-<div class="px-3 pt-3 pb-5">
-  <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5 g-3" id="listings-grid"></div>
+<div class="px-grid pt-3 pb-5" style="padding-left:40px;padding-right:40px;">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5 g-3"
+       id="listings-grid"></div>
   <div id="no-results" class="text-center py-5" style="display:none;">
     <i class="bi bi-house-slash display-3 text-muted"></i>
     <p class="text-muted mt-3 mb-3">No listings match your filters.</p>
@@ -601,6 +855,85 @@ function renderCard(l) {
 /* State for custom dropdowns */
 const filterValues = { type: '', status: '' };
 
+/* State for drawer filters */
+const drawerFilters = { beds: '', baths: '', quality: '' };
+let priceMin = 0, priceMax = 5000000;
+
+/* ── Tab switching ── */
+function switchTab(tab) {
+  document.querySelectorAll('.adv-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('content-adv').style.display    = tab === 'adv'     ? '' : 'none';
+  document.getElementById('content-quality').style.display = tab === 'quality' ? '' : 'none';
+}
+
+/* ── Toggle filter pill buttons ── */
+function toggleFilter(key, btn, value) {
+  btn.closest('.ftog-group').querySelectorAll('.ftog-btn')
+     .forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  drawerFilters[key] = value;
+  updateShowBtn();
+  applyFilters();
+}
+
+/* ── Price slider ── */
+const PRICE_MAX = 5000000;
+const priceTicks = [0,.02,.06,.15,.3,.55,.75,.88,.95,.97,.99,1];
+
+function updatePriceSlider() {
+  const minV = parseInt(document.getElementById('range-min').value);
+  const maxV = parseInt(document.getElementById('range-max').value);
+  if (minV >= maxV) {
+    if (event.target.id === 'range-min') document.getElementById('range-min').value = maxV - 1;
+    else document.getElementById('range-max').value = minV + 1;
+  }
+  const lo = parseInt(document.getElementById('range-min').value);
+  const hi = parseInt(document.getElementById('range-max').value);
+  const fill = document.getElementById('range-fill');
+  fill.style.left  = lo + '%';
+  fill.style.width = (hi - lo) + '%';
+  priceMin = Math.round((lo / 100) * PRICE_MAX);
+  priceMax = hi >= 99 ? Infinity : Math.round((hi / 100) * PRICE_MAX);
+  document.getElementById('price-min-label').textContent = fmtPriceShort(priceMin);
+  document.getElementById('price-max-label').textContent = hi >= 99 ? '$5M+' : fmtPriceShort(priceMax);
+  updateHistogramHighlight(lo, hi);
+  updateShowBtn();
+  applyFilters();
+}
+
+function fmtPriceShort(v) {
+  if (v >= 1000000) return '$' + (v/1000000).toFixed(1).replace(/\.0$/,'') + 'M';
+  if (v >= 1000)    return '$' + Math.round(v/1000) + 'k';
+  return '$' + v;
+}
+
+function buildHistogram() {
+  const heights = [4,8,18,32,52,72,88,95,90,82,68,54,40,30,22,16,11,8,6,4,3,5,2,2,1];
+  const wrap = document.getElementById('price-histogram');
+  wrap.innerHTML = heights.map((h,i) =>
+    `<div class="price-bar in-range" data-i="${i}" style="height:${h}px"></div>`
+  ).join('');
+}
+
+function updateHistogramHighlight(lo, hi) {
+  const bars = document.querySelectorAll('#price-histogram .price-bar');
+  const total = bars.length;
+  bars.forEach((b, i) => {
+    const pct = (i / total) * 100;
+    b.classList.toggle('in-range', pct >= lo && pct <= hi);
+  });
+}
+
+/* ── Update show button count ── */
+function updateShowBtn() {
+  const btn = document.getElementById('show-btn');
+  if (btn) {
+    const count = document.getElementById('count-display').textContent;
+    btn.textContent = `Show ${count} listings`;
+  }
+}
+
 function setDropdown(key, value, label, btn) {
   filterValues[key] = value;
   document.getElementById(`dd-${key}-label`).textContent = label;
@@ -612,20 +945,18 @@ function setDropdown(key, value, label, btn) {
 function applyFilters() {
   const status  = filterValues.status;
   const type    = filterValues.type;
-  const minP    = parseFloat(document.getElementById("f-min")?.value)  || 0;
-  const maxP    = parseFloat(document.getElementById("f-max")?.value)  || Infinity;
-  const minBeds = parseInt(document.getElementById("f-beds")?.value)   || 0;
-  const quality = document.getElementById("f-quality")?.value          || "";
-  const search  = (document.getElementById("f-search")?.value || "").trim().toLowerCase();
+  const minBeds = typeof drawerFilters.beds === 'number' ? drawerFilters.beds : 0;
+  const minBaths= typeof drawerFilters.baths === 'number' ? drawerFilters.baths : 0;
+  const quality = drawerFilters.quality || '';
   const sort    = document.getElementById("f-sort").value;
 
   let data = listings.filter(l => {
-    if (status  && l.status  !== status)  return false;
-    if (type    && l.type    !== type)    return false;
-    if (quality && l.quality !== quality) return false;
-    if (l.price < minP || l.price > maxP) return false;
-    if (minBeds && (l.beds === null || l.beds < minBeds)) return false;
-    if (search  && !l.address.toLowerCase().includes(search)) return false;
+    if (status   && l.status  !== status)   return false;
+    if (type     && l.type    !== type)     return false;
+    if (quality  && l.quality !== quality)  return false;
+    if (l.price < priceMin || (priceMax !== Infinity && l.price > priceMax)) return false;
+    if (minBeds  && (l.beds  === null || l.beds  < minBeds))  return false;
+    if (minBaths && (l.baths === null || l.baths < minBaths)) return false;
     return true;
   });
 
@@ -638,6 +969,7 @@ function applyFilters() {
   const grid = document.getElementById("listings-grid");
   const noR  = document.getElementById("no-results");
   document.getElementById("count-display").textContent = data.length.toLocaleString();
+  updateShowBtn();
 
   if (!data.length) {
     grid.innerHTML = "";
@@ -649,21 +981,32 @@ function applyFilters() {
 }
 
 function resetFilters() {
+  /* dropdowns */
   filterValues.type   = '';
   filterValues.status = '';
   document.getElementById('dd-type-label').textContent   = 'All Listings';
   document.getElementById('dd-status-label').textContent = 'Both';
-  document.querySelectorAll('.fb-select-menu .dropdown-item').forEach((el, i) => {
-    el.classList.toggle('is-selected', i === 0 || el.textContent.trim() === 'Both' || el.textContent.trim() === 'All Listings');
+  /* drawer toggles */
+  drawerFilters.beds = drawerFilters.baths = drawerFilters.quality = '';
+  document.querySelectorAll('.ftog-group .ftog-btn').forEach((btn,i) => {
+    btn.classList.toggle('active', btn.textContent.trim() === 'Any');
   });
-  ["f-min","f-max","f-beds","f-quality","f-sort"]
-    .forEach(id => { const el = document.getElementById(id); if (el) el.selectedIndex = 0; });
-  const fs = document.getElementById("f-search");
-  if (fs) fs.value = "";
+  /* price slider */
+  priceMin = 0; priceMax = Infinity;
+  document.getElementById('range-min').value = 0;
+  document.getElementById('range-max').value = 100;
+  document.getElementById('range-fill').style.left  = '0%';
+  document.getElementById('range-fill').style.width = '100%';
+  document.getElementById('price-min-label').textContent = '$0';
+  document.getElementById('price-max-label').textContent = '$5M+';
+  updateHistogramHighlight(0, 100);
+  /* sort */
+  document.getElementById('f-sort').selectedIndex = 0;
   applyFilters();
 }
 
 /* Boot */
+buildHistogram();
 applyFilters();
 </script>
 </body>
